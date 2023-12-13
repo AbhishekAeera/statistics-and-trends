@@ -1,0 +1,69 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+file_path = 'C:/dataset/Global.csv'  # Replace with your file path
+data = pd.read_csv("Global.csv")
+
+print(data.describe())
+
+plt.figure(figsize=(8, 6))
+sns.barplot(x='month_date', y='anomaly_value', data=data.head(10))  # Plotting first 10 rows
+plt.title('Anomaly Value by Month (First 10 Rows)')
+plt.xlabel('Month')
+plt.ylabel('Anomaly Value')
+plt.xticks(rotation=45)
+plt.show()
+
+plt.figure(figsize=(8, 6))
+data[['upper_95_ci', 'lower_95_ci']].head(10).plot(kind='bar')
+plt.title('Upper and Lower 95% CI by Month (First 10 Rows)')
+plt.xlabel('Month')
+plt.ylabel('CI Values')
+plt.xticks(rotation=45)
+plt.legend(['Upper 95% CI', 'Lower 95% CI'])
+plt.show()
+
+plt.figure(figsize=(10, 6))
+plt.plot(data['month_date'], data['anomaly_value'])
+plt.title('Anomaly Value over Time')
+plt.xlabel('Month')
+plt.ylabel('Anomaly Value')
+plt.xticks(rotation=45)
+plt.show()
+
+plt.figure(figsize=(10, 6))
+plt.plot(data['month_date'], data['upper_95_ci'], label='Upper 95% CI')
+plt.plot(data['month_date'], data['lower_95_ci'], label='Lower 95% CI')
+plt.title('Upper and Lower 95% CI over Time')
+plt.xlabel('Month')
+plt.ylabel('CI Values')
+plt.xticks(rotation=45)
+plt.legend()
+plt.show()
+
+plt.figure(figsize=(8, 6))
+sns.boxplot(data['anomaly_value'])
+plt.title('Boxplot of Anomaly Values')
+plt.xlabel('Anomaly Value')
+plt.show()
+
+numeric_data = data.drop('month_date', axis=1)  # Assuming 'month_date' is the non-numeric column
+
+plt.figure(figsize=(8, 6))
+sns.heatmap(numeric_data.corr(), annot=True, cmap='coolwarm', fmt='.2f')
+plt.title('Correlation Plot (Numeric Columns Only)')
+plt.show()
+
+# Selecting numeric columns for correlation calculation
+numeric_data = data.select_dtypes(include='float64')  # Assuming all relevant columns are of float type
+
+# Calculating correlations
+correlation_matrix = numeric_data.corr()
+
+# Visualizing correlations using a scatter matrix
+pd.plotting.scatter_matrix(numeric_data, figsize=(10, 8))
+plt.suptitle('Scatter Matrix of Correlated Variables', y=1.02)
+plt.show()
+
+
